@@ -38,7 +38,65 @@ True
 If it prints `False`, the generator stops because Khmer text may render
 incorrectly.
 
-## 2. macOS setup
+## 2. Platform setup
+
+### Windows
+
+Install Python 3.10 or newer from [python.org](https://www.python.org/downloads/windows/)
+and enable **Add Python to PATH** during installation. In PowerShell, create a
+virtual environment and install the dependencies:
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install Pillow numpy opencv-python
+```
+
+Recent Pillow Windows wheels normally include RAQM support. Verify it with:
+
+```powershell
+python -c "from PIL import features; print(features.check('raqm'))"
+```
+
+If PowerShell prevents environment activation, run:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Then activate `.venv` again and rerun the verification command.
+
+### Linux (Ubuntu/Debian)
+
+Install Python, the native libraries needed by Pillow, and the Python
+dependencies:
+
+```bash
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip \
+  libraqm-dev libharfbuzz-dev libjpeg-dev
+
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install Pillow numpy opencv-python
+```
+
+Verify that Pillow can use RAQM:
+
+```bash
+python -c "import sys; from PIL import features; print(sys.executable); print(features.check('raqm'))"
+```
+
+If the result is `False`, reinstall Pillow after the native libraries are
+installed:
+
+```bash
+python -m pip install --force-reinstall --no-cache-dir Pillow
+```
+
+### macOS
 
 Install Homebrew libraries:
 
